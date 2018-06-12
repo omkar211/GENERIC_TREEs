@@ -1,0 +1,176 @@
+#include<iostream>
+using namespace std;
+
+class node{
+public:
+    int data;
+    node**children;
+    int count;
+    node(int d)
+    {
+        data=d;
+        count=0;
+        children=NULL;
+    }
+};
+///sum of all data
+void sum(node*root)
+{
+    if(root==NULL)
+        return;
+        int sum=0;
+        for(int i=0;i<root->count;i++)
+            sum=sum+ root->children[i]->data;
+        if(root->data>sum && root->children!=NULL)
+        {
+            cout<<root->data<<endl;
+        }
+}
+///node greater than x
+void Nodes(node*root,int x)
+{
+    if(root==NULL)
+        return;
+
+    if(root->data>x)
+    {
+        cout<<root->data<<","<<endl;
+    }
+    for(int i=0;i<root->count;i++)
+        Nodes(root->children[i],x);
+}
+///at k depth element
+void K_depth(node*root,int k)
+{
+    if(root==NULL)
+        return;
+    if(k==0)
+    {
+        cout<<root->data<<endl;
+
+    }
+    if(k<=0)
+        return;
+    k--;
+    for(int i=0;i<root->count;i++)
+    {
+
+       K_depth(root->children[i],k);
+
+    }
+
+}
+
+
+///height of tree
+int height(node*root){
+    ///Base
+    if(root==NULL){
+        return 0;
+    }
+    ///Otherwise
+    int h = 0;
+    for(int i=0;i<root->count;i++){
+        int subTreeHeight = height(root->children[i]);
+        h = max(h,subTreeHeight);
+    }
+    return h + 1;
+}
+///find largest data
+int find_large(node*root)
+{
+    if(root==NULL)
+        return 0;
+
+      int k=root->data;
+      for(int i=0;i<root->count;i++)
+      {
+          int subtree=find_large(root->children[i]);
+          k=max(k,subtree);
+      }
+      return k;
+
+}
+///depth of tree
+void depth(node*root,int k)
+{
+   if(root==NULL)
+    return;
+
+    cout<<root->data<<"-->"<<k<<endl;
+    k++;
+   for(int i=0;i<root->count;i++)
+   {
+     depth(root->children[i],k);
+   }
+
+}
+///degree of tree
+void degree(node*root)
+{
+    if(root==NULL)
+        return;
+    cout<<root->data<<"-->"<<root->count<<endl;
+    for(int i=0;i<root->count;i++)
+    {
+
+        degree(root->children[i]);
+
+    }
+}
+///print the tree
+void print(node*root)
+{
+    if(root==NULL)
+        return;
+        cout<<endl<<root->data<<"-->";
+    for(int i=0;i<root->count;i++)
+    {
+        cout<<root->children[i]->data<<",";
+    }
+    for(int i=0;i<root->count;i++)
+    {
+        print(root->children[i]);
+    }
+}
+///build tree
+node* buildTree()
+{
+ int d;
+ cout<<"enter the data"<<endl;
+ cin>>d;
+ node*root=new node(d);
+ cout<<"enter the number of nodes  "<<root->data<<endl;
+ int c;
+ cin>>c;
+root->count=c;
+root->children=new node*[c];
+for(int i=0;i<c;i++){
+        cout<<root->data<<"---->"<<i+1<<"   ";
+    root->children[i]=buildTree();
+
+}
+return root;
+}
+
+int main()
+{
+ node*root=buildTree();
+print(root);
+cout<<endl<<"degree of nodes"<<endl;
+degree(root);
+cout<<endl<<"depth "<<endl;
+depth(root,0);
+cout<<endl;
+cout<<"now height of a tree"<<endl;
+cout<<height(root)<<endl;
+
+cout<<"largest no of data in a tree"<<endl;
+cout<<find_large(root);
+cout<<endl<<"at k position "<<endl;
+K_depth(root,2);
+cout<<"node greater than x:"<<endl;
+Nodes(root,4);
+cout<<"sum of all data:";
+sum(root);
+}
